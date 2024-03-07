@@ -16,6 +16,7 @@
         "symfony/dotenv": "7.0.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.0.*",
+        "symfony/http-client": "7.0.*",
         "symfony/runtime": "7.0.*",
         "symfony/twig-bundle": "7.0.*",
         "symfony/yaml": "7.0.*",
@@ -72,7 +73,12 @@
         }
     },
     "require-dev": {
+<<<<<<< HEAD
         "doctrine/doctrine-fixtures-bundle": "*",
+=======
+        "doctrine/doctrine-fixtures-bundle": "^3.5",
+        "fakerphp/faker": "^1.23",
+>>>>>>> b95bbb17f3894f1f2f43a2cc4d1e9cc7bfffe8de
         "symfony/maker-bundle": "^1.56",
         "symfony/stopwatch": "7.0.*",
         "symfony/web-profiler-bundle": "7.0.*"
