@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Debilidad;
 use App\Entity\Pokemon;
 use App\Form\PokemonType;
+use App\Manager\PokemonManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class PokemonController extends AbstractController
 {
     #[Route("/insert/pokemon", name: "insertPokemons")]
-    public function insertPokemons(Request $request, EntityManagerInterface $doctrine){
+    public function insertPokemons(
+        Request $request,
+        EntityManagerInterface $doctrine,
+        PokemonManager $manager
+    ){
 
         $form = $this->createForm(PokemonType::class);
 
@@ -22,19 +27,25 @@ class PokemonController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $pokemon = $form->getData();
 
+            $imagenPokemon = $form->get('ficheroImagen')->getData();
+            if ($imagenPokemon) {
+                $nomPokemonImagen = $manager->subirImagen(
+                    $imagenPokemon,
+                    $this->getParameter("kernel.project_dir")."/public/images"
+                );
+
+                $pokemon->setImagen("/images/$nomPokemonImagen");
+            }
+
             $doctrine->persist($pokemon);
             $doctrine->flush();
 
             $this->addFlash("Exito", "pokemon insertado correctamente");
 
             return $this->redirectToRoute("getPokemons");
-
         }
 
         return $this->render("pokemons/insertPokemon.html.twig", ["pokemonForm" => $form]);
-
-
-
     }
 
     #[Route("/edit/pokemon/{id}", name: "editPokemons")]
@@ -58,9 +69,18 @@ class PokemonController extends AbstractController
         }
 
         return $this->render("pokemons/insertPokemon.html.twig", ["pokemonForm" => $form]);
+    }
 
+    #[Route("/delete/pokemon/{id}", name: "deletePokemon")]
+    public function deletePokemon($id, EntityManagerInterface $doctrine)
+    {
+        $repositorio = $doctrine->getRepository(Pokemon::class);
+        $pokemon = $repositorio->find($id);
 
+        $doctrine->remove($pokemon);
+        $doctrine->flush();
 
+        return $this->redirectToRoute("getPokemons");
     }
 
 

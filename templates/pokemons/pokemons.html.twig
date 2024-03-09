@@ -19,6 +19,7 @@
                         {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('editPokemons', {'id': pokemon.id}) }}" class="btn btn-primary">Editar</a>
                         {% endif %}
+                        <a href="{{ path('deletePokemon', {'id': pokemon.id}) }}" class="btn btn-danger">Borrar</a>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ use App\Entity\Debilidad;
 use App\Entity\Pokemon;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,7 +19,10 @@ class PokemonType extends AbstractType
         $builder
             ->add('nombre')
             ->add('descripcion')
-            ->add('imagen')
+            ->add('ficheroImagen', FileType::class, [
+                'label' => 'Sube la imagen del Pokemon',
+                'mapped' => false
+            ])
             ->add('codigo', NumberType::class, [
                 'attr' => [
                     'placeholder' => 'inserta el codigo del pokemon'
