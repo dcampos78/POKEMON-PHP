@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Debilidad;
 use App\Entity\Pokemon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,14 +12,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class PokemonController extends AbstractController
 {
 
-    #[Route("/pokemon/{id}")]
+    #[Route("/pokemon/{id}", name: "getPokemon")]
     public function getPokemon(EntityManagerInterface $doctrine, $id)
     {
         $repositorio = $doctrine->getRepository(Pokemon::class);
         $pokemon = $repositorio->find($id);
         return $this->render("pokemons/pokemon.html.twig", ["pokemon" => $pokemon]);
     }
-    #[Route("/pokemons")]
+    #[Route("/pokemons", name: "getPokemons")]
     public function getPokemons(EntityManagerInterface $doctrine)
     {
         $repositorio = $doctrine->getRepository(Pokemon::class);
@@ -48,9 +49,27 @@ class PokemonController extends AbstractController
             $pokemon3-> setImagen("https://assets.pokemon.com/assets/cms2/img/pokedex/full/019.png");
             $pokemon3-> setCodigo(19);
 
+            $debilidad = new Debilidad();
+            $debilidad->setNombre("Fuego");
+
+            $debilidad2 = new Debilidad();
+            $debilidad2->setNombre("Agua");
+
+            $debilidad3 = new Debilidad();
+            $debilidad3->setNombre("Hipnosis");
+
+            $pokemon->addDebilidade($debilidad2);
+
+            $pokemon2->addDebilidade($debilidad);
+            $pokemon2->addDebilidade($debilidad3);
+
+
             $doctrine -> persist($pokemon);
             $doctrine -> persist($pokemon2);
             $doctrine -> persist($pokemon3);
+            $doctrine -> persist($debilidad);
+            $doctrine -> persist($debilidad2);
+            $doctrine -> persist($debilidad3);
 
             $doctrine -> flush();
 

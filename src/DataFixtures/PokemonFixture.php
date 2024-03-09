@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Debilidad;
 use App\Entity\Pokemon;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -34,11 +35,27 @@ class PokemonFixture extends Fixture
             $pokemon-> setImagen("https://assets.pokemon.com/assets/cms2/img/pokedex/full/$idPokemon.png");
             $pokemon-> setCodigo($idPokemon);
 
+            $numDebilidades = $faker->numberBetween(0, 3);
+
+            for ($j = 0; $j<$numDebilidades; $j++){
+                $debilidad = $faker->numberBetween(1, 10);
+
+                $debilidadRef = $this->getReference(
+                    Debilidad::class . $debilidad
+                );
+                $pokemon->addDebilidade($debilidadRef);
+            }
+
             $manager -> persist($pokemon);
         }
 
         $manager->flush();
         // $product = new Product();
         // $manager->persist($product);
+    }
+
+    public function getDependencies()
+    {
+        return [DebilidadFixtures::class];
     }
 }
